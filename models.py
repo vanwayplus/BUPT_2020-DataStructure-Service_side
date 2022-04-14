@@ -35,26 +35,24 @@ class Superuser(BaseModel):
 
 class Course(BaseModel):
     class exam(BaseModel):
-        id: int
         name: str
-        start: datetime
-        end: datetime
-        members: list
+        start: str
+        end: str
+        members: Optional[List[str]] = []
         address: str
+        create_time: Optional[str] = None
         description: Optional[str] = None
 
     class homework(BaseModel):
-        id: int
         name: str
         submitted: Optional[list] = []
         files: Optional[list] = []
         folder: Optional[str] = None
         unsubmitted: Optional[list] = []
-        start: datetime
-        ddl: datetime
+        start: str
+        end: str
         source: Optional[list] = None
         description: str
-        name_rule: Optional[str] = None
 
     class resource(BaseModel):
         name: str

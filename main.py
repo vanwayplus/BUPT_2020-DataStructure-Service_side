@@ -181,7 +181,7 @@ async def query_homework(
 async def upload_resources(
         file: UploadFile = File(...),  # UploadFile转为文件对象，可以保存文件到本地
         user: str = Form(...),
-        sc_id: str = Form(...),
+        sc_id: Optional[str] = Form(...),
         course_id: str = Form(...),
         description: Optional[str] = Form(0, ...)
 ):
@@ -252,7 +252,7 @@ async def response_model(user: UserIn):
 
 
 # 添加课程
-@app.post("/superuser/courses/create_courses")
+@app.post("/superuser/courses/create_course")
 async def create_courses(
         c_name: str = Form(...),
         c_clas: int = Form(...),
@@ -274,22 +274,80 @@ async def create_courses(
     new_name_id = c_name + "-" + str(c_clas)
     course[new_name_id] = formatted
     with open("users.json", "w", encoding='utf-8') as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
+        json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
         "course_name": new_name_id,
         "course": formatted
     })
 
-# TODO: 创建考试信息
-@app.put("/superuser/courses/create_exams/{course}")
-async def create_exams(exam: models.Course.exam):
-    pass
+
+# 创建考试信息
+@app.post("/superuser/courses/create_exams")
+async def create_exams(
+        superuser_id: str = Form(...),
+        course_id: str = Form(...),
+        exam_name: str = Form(...),
+        start_time: str = Form(...),
+        end_time: str = Form(...),
+        members: list = Form(...),
+        address: str = Form(...),
+        cr_time: str = Form(...),
+        description: Optional[str] = None
+):
+    new_exam = models.Course.exam(
+        name=exam_name,
+        start=start_time,
+        end=end_time,
+        members=members,
+        address=address,
+        description=description
+    )
+    new_exam.create_time = cr_time
+    raw = course[course_id]
+    cur = models.Course.construct(**raw)
+    cur.exams.append(new_exam)
+    formatting = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatted = json.loads(formatting)
+    course[course_id] = formatted
+    with open("users.json", "w", encoding='utf-8') as f:
+        json.dump(course, f, indent=4, ensure_ascii=False)
+    return ({
+        "exams": formatted
+    })
 
 
 # TODO: 发布作业
-@app.put("/superuser/courses/create_homework/{hmwk}")
-async def create_exams(exam: models.Course.exam):
-    pass
+@app.put("/superuser/courses/create_homework")
+async def create_exams(
+        name: str = Form(...),
+        clas: Optional[list] = Form(...),
+        start: str = Form(...),
+        end: str = Form(...),
+        file: Optional[UploadFile] = Form(...),
+        description: str = Form(...),
+):
+    new_homework = models.Course.homework(
+        name=name,
+        start=start,
+        end = end,
+        description = description
+    )
+    members = []
+    for group in clas:
+        for _, usr in users:
+            cur_user = models.User(**usr)
+            if cur_user.clas is group:
+                members.append(cur_user.student_id)
+    new_homework.unsubmitted = members
+
+    formatting = json.dumps(new_homework, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatted = json.loads(formatting)  # 格式化
+    with open("users.json", "w", encoding='utf-8') as f:
+        json.dump(formatted, f, indent=4, ensure_ascii=False)
+    return ({
+        "name": name,
+        "course": formatted
+    })
 
 
 # TODO:修改课程地点
