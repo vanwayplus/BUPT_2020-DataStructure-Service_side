@@ -122,15 +122,21 @@ async def upload_homework(
     cur = models.Course.construct(**raw)
     hm = cur.homework
     version = 0
+
     for file in hm.files:
         name = file.split('.')
         info = name.split('-')
         if info[-1] and info[0] is user:
             version = version + 1
+    # def encode-file(input file, student_id, type, course, id=0, version=0):
     zip_name = encodefile(file_b, user, "homework", course_id, hm.id, version)
+
+    # 更新当前文件属性
+    hm.unsubmitted.remove(user)
     hm.submitted.append(user)
     hm.files.append(zip_name)
-    cur.homework = hm
+
+    cur.homeworks[hm_id] = hm
     n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     n = json.loads(n)
     course[course_id] = n
@@ -164,31 +170,66 @@ async def query_homework(
                 {
                     "id": info[1],
                     "versions": info[-1],
-                    "scoores": -1
+                    "scores": -1
                 }
             )
     return hms
 
 
-# TODO:上传课程资料
-@app.put("/user/courses/upload_resources/{course}")
+# 上传资源
+@app.put("/user/courses/upload_resources")
 async def upload_resources(
         file: UploadFile = File(...),  # UploadFile转为文件对象，可以保存文件到本地
         user: str = Form(...),
         sc_id: str = Form(...),
-        course_id=Form(...),
+        course_id: str = Form(...),
+        description: Optional[str] = Form(0, ...)
 ):
     raw = course[course_id]
     cur = models.Course.construct(**raw)
-    sc = cur.resources
-    for name in sc:
-        if name == sc_id:
-            return "existed"
+    # def encodefile(inputfile, student_id, type, course, id=0, version=0):
+    zip_name = encodefile(file, user, "homework", cur.name)
+    new_sc = models.Course.resource(
+        name=description,
+        authors=[user],
+        files=[zip_name]
+    )
+    new_sc.description.append(description)
+    new_sc.time = datetime
+    cur.resources.append(new_sc)
+    n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    n = json.loads(n)
+    # 更新
+    course[course_id] = n
+    with open("users.json", "w", encoding='utf-8') as f:
+        json.dump(users, f, indent=4, ensure_ascii=False)
+    return ({
+        'file_name': zip_name,
+        'sc_name': description,
+        'sc_id': len(cur.resources),
+        'author': user,
+        'time': datetime,
+    })
 
-    zip_name = encodefile(file, user,"homework",cur.name)
-    sc.submitted.append(user)
-    sc.files.append(zip_name)
-    cur.homework = sc
+
+# 更新资源
+@app.put("/user/courses/update_resources")
+async def update_resources(
+        file: UploadFile = File(...),  # UploadFile转为文件对象，可以保存文件到本地
+        user: str = Form(...),
+        sc_id: int = Form(...),  # id
+        course_id: str = Form(...),  # name
+        description: str = Form(...)  # 描述
+):
+    raw = course[course_id]
+    cur = models.Course.construct(**raw)
+    # sc_list = cur.resources
+    if sc_id > len(cur.resources):
+        return "not exist, please create one"
+    zip_name = encodefile(file, user, "homework", cur.name)
+    # cur_sc = cur.resources[sc_id]
+    cur.resources[sc_id].files.append(zip_name)
+    cur.resources[sc_id].description.append(description)
     n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     n = json.loads(n)
     course[course_id] = n
@@ -196,16 +237,10 @@ async def upload_resources(
         json.dump(users, f, indent=4, ensure_ascii=False)
     return ({
         'file_name': zip_name,
-        'version': version,
-        'homework_id': hm,
-        'user': user,
-        'time': datetime,
+        'name': cur.resources[sc_id],
+        'details': description,
+        'author': user,
     })
-
-
-# TODO:上传课程资料
-@app.put("/user/courses/update_resources/{course}")
-async def update_resources(resource: models.Course.resource, user: str):
     pass
 
 

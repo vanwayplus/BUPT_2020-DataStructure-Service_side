@@ -17,6 +17,7 @@ class User(BaseModel):
         end: str
         mode: str
         description: Optional[str] = None
+
     clas: int
     student_id: str
     password: str
@@ -24,7 +25,6 @@ class User(BaseModel):
     courses: Optional[list] = []
     activities: Optional[list] = []
     sign_up: Optional[datetime]
-
 
 
 class Superuser(BaseModel):
@@ -57,11 +57,11 @@ class Course(BaseModel):
         name_rule: Optional[str] = None
 
     class resource(BaseModel):
-        id: int
         name: str
-        author: Optional[str] = None
+        authors: List[int] = None
         files: List[int] = []
-        time: Optional[datetime]
+        time: Optional[date]
+        description: Optional[List[str]] = []
 
     name: str
     clas: int
@@ -70,10 +70,12 @@ class Course(BaseModel):
     start: List[int] = []
     end: List[int] = []
     contact_group: str
-    resources: Optional[list] = []
-    exams: Optional[List[exam]] = []
-    homeworks: Optional[List[homework]] = []
+    resources: Optional[list[resource]] = []  # list of sc format
+    exams: Optional[List[exam]] = []  # list of exam
+    homeworks: Optional[List[homework]] = []  # list of hm
     create_time: Optional[datetime]
+
+
 """
 14节课， 
 "1

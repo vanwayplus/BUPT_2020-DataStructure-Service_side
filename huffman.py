@@ -94,10 +94,15 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
     raw = 0b1
     last = 0
     name = inputfile.split('.')
+    # 获取存储路径以及文件名
     if type is "homework":
         o = open("file/" + course + "/homework/" + student_id + "-" + id + "-" + version + ".ys", 'wb')
     elif type is "source":
         o = open("file/" + course + "/source/" + id + ".ys", 'wb')
+    else:
+        return "invalid input"
+
+    #写入原文件信息
     name = inputfile.split('/')
     o.write((name[len(name) - 1] + '\n').encode(encoding="utf-8"))  # 写出原文件名
     o.write(int.to_bytes(len(ec_dict), 2, byteorder='big'))  # 写出结点数量
