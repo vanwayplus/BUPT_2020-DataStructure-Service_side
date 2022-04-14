@@ -252,8 +252,20 @@ async def response_model(user: UserIn):
 
 
 # TODO:添加课程
-@app.put("/superuser/courses/create_courses")
-async def create_courses(course: models.Course):
+@app.post("/superuser/courses/create_courses")
+async def create_courses(
+        name: str = Form(...),
+        clas: int = Form(...),
+        date: list = Form(...),
+        start: list = Form(...),
+        end: list = Form(...),
+        contact_group: str = Form(...),  # id
+):
+    new_course = models.Course(
+        name=name,
+        clas=clas,
+
+    )
     pass
 
 
