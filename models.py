@@ -67,6 +67,7 @@ class Course(BaseModel):
     date: List[int] = []
     start: List[int] = []
     end: List[int] = []
+    address: str
     contact_group: str
     resources: Optional[list[resource]] = []  # list of sc format
     exams: Optional[List[exam]] = []  # list of exam

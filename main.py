@@ -259,6 +259,7 @@ async def create_courses(
         c_date: list = Form(...),
         c_start: list = Form(...),
         c_end: list = Form(...),
+        c_address: str = Form(...),
         c_contact_group: str = Form(...),  # id
 ):
     new_course = models.Course(
@@ -267,7 +268,8 @@ async def create_courses(
         date=c_date,
         start=c_start,
         end=c_end,
-        c_contact_group=c_contact_group
+        address=c_address,
+        contact_group=c_contact_group
     )
     formatting = json.dumps(new_course, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     formatted = json.loads(formatting)  # 格式化
@@ -316,7 +318,7 @@ async def create_exams(
     })
 
 
-# TODO: 发布作业
+# 发布作业
 @app.put("/superuser/courses/create_homework")
 async def create_exams(
         name: str = Form(...),
@@ -329,8 +331,8 @@ async def create_exams(
     new_homework = models.Course.homework(
         name=name,
         start=start,
-        end = end,
-        description = description
+        end=end,
+        description=description
     )
     members = []
     for group in clas:
@@ -340,7 +342,8 @@ async def create_exams(
                 members.append(cur_user.student_id)
     new_homework.unsubmitted = members
 
-    formatting = json.dumps(new_homework, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatting = json.dumps(new_homework, default=lambda obj: obj.__dict__, indent=4, sort_keys=True,
+                            ensure_ascii=False)
     formatted = json.loads(formatting)  # 格式化
     with open("users.json", "w", encoding='utf-8') as f:
         json.dump(formatted, f, indent=4, ensure_ascii=False)
@@ -350,16 +353,44 @@ async def create_exams(
     })
 
 
-# TODO:修改课程地点
-@app.post("/superuser/courses/edit_address/{course}")
-async def edit_course_address(addr: str):
-    pass
+# 修改课程信息
+@app.put("/superuser/courses/edit")
+async def edit_course_address(
+        course_id: str = Form(...),
+        new_clas: Optional[list[int]] = Form(...),
+        new_date: Optional[list] = Form(...),
+        new_start: Optional[list] = Form(...),
+        new_end: Optional[list] = Form(...),
+        new_contact_group: Optional[str] = Form(...),  # id
+        new_address: Optional[str] = Form(...)
+):
+    raw = course[course_id]
+    cur = models.Course.construct(**raw)
+    if new_clas:
+        cur.clas = new_clas
+    if new_address:
+        cur.address = new_address
+    if new_date:
+        cur.date = new_date
+    if new_start:
+        cur.start = new_start
+    if new_end:
+        cur.end = new_end
+    if new_contact_group:
+        cur.contact_group = new_contact_group
 
+    formatting = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatted = json.loads(formatting)
 
-# TODO:修改课程时间
-@app.post("/superuser/courses/edit_time/{course}")
-async def edit_course_address(start: date, end: date):
-    pass
+    course[course_id] = formatted
+
+    with open("courses.json", "w", encoding='utf-8') as f:
+        json.dump(course, f, indent=4, ensure_ascii=False)
+
+    return ({
+        "course": formatted
+    })
+
 
 # TODO:下载作业
 # TODO: 错误处理
