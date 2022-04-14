@@ -60,7 +60,7 @@ class Course(BaseModel):
         id: int
         name: str
         author: Optional[str] = None
-        files: list[str]
+        files: List[int] = []
         time: Optional[datetime]
 
     name: str

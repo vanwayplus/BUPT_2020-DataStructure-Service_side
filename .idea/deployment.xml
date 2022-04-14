@@ -19,7 +19,7 @@
       <paths name="van@101.43.198.191:22">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/pycharm_project_116" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/van/fastApiProject2" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
