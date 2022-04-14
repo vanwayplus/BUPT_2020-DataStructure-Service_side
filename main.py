@@ -251,23 +251,34 @@ async def response_model(user: UserIn):
     return users[user.username]
 
 
-# TODO:添加课程
+# 添加课程
 @app.post("/superuser/courses/create_courses")
 async def create_courses(
-        name: str = Form(...),
-        clas: int = Form(...),
-        date: list = Form(...),
-        start: list = Form(...),
-        end: list = Form(...),
-        contact_group: str = Form(...),  # id
+        c_name: str = Form(...),
+        c_clas: int = Form(...),
+        c_date: list = Form(...),
+        c_start: list = Form(...),
+        c_end: list = Form(...),
+        c_contact_group: str = Form(...),  # id
 ):
     new_course = models.Course(
-        name=name,
-        clas=clas,
-
+        name=c_name,
+        clas=c_clas,
+        date=c_date,
+        start=c_start,
+        end=c_end,
+        c_contact_group=c_contact_group
     )
-    pass
-
+    formatting = json.dumps(new_course, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatted = json.loads(formatting)  # 格式化
+    new_name_id = c_name + "-" + str(c_clas)
+    course[new_name_id] = formatted
+    with open("users.json", "w", encoding='utf-8') as f:
+        json.dump(users, f, indent=4, ensure_ascii=False)
+    return ({
+        "course_name": new_name_id,
+        "course": formatted
+    })
 
 # TODO: 创建考试信息
 @app.put("/superuser/courses/create_exams/{course}")
