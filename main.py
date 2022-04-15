@@ -396,18 +396,9 @@ async def edit_course_address(
     })
 
 
-# TODO:下载作业
-@app.get("superuser/courses/download_homework")
-async def download_homework(
-        user_id: str = Form(...),
-        course_id: str = Form(...),
-        homework_id: int = Form(...)
-):
-    pass
-
 
 #  下载资源
-@app.get("user/courses/download_resource")
+@app.get("/user/courses/download_resource")
 async def download_resource(
         course_id: str = Form(...),
         sc_id: int = Form(...),
@@ -427,9 +418,18 @@ async def download_resource(
         background=task
     )
 
+# TODO:下载作业
+@app.get("/courses/download_homework")
+async def download_homework(
+        user_id: str = Form(...),
+        course_id: str = Form(...),
+        homework_id: int = Form(...)
+):
+    pass
+
 
 # TODO: 批改作业
-@app.put("superuser/courses/charge_homework")
+@app.put("/superuser/courses/charge_homework")
 async def download_homework(
         user_id: str = Form(...),
         course_id: str = Form(...),
