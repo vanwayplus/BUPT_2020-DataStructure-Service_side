@@ -102,7 +102,7 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
     else:
         return "invalid input"
 
-    #写入原文件信息
+    # 写入原文件信息
     name = inputfile.split('/')
     o.write((name[len(name) - 1] + '\n').encode(encoding="utf-8"))  # 写出原文件名
     o.write(int.to_bytes(len(ec_dict), 2, byteorder='big'))  # 写出结点数量
@@ -134,7 +134,7 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
         o.write(int.to_bytes(raw, 1, byteorder='big'))
     o.close()
     print("File encode successful.")
-    return student_id + "-" + homework_id + "-" + version + ".ys"
+    return student_id + "-" + id + "-" + version + ".ys"
 
 
 def decodefile(inputfile):
@@ -147,8 +147,11 @@ def decodefile(inputfile):
     eof = f.tell()
     f.seek(0)
     name = inputfile.split('/')
-    outputfile = inputfile.replace(name[len(name) - 1], f.readline().decode(encoding="utf-8"))
-    o = open(outputfile.replace('\n', ''), 'wb')
+    #文件名
+    output_file_temp = inputfile.replace(name[len(name) - 1], f.readline().decode(encoding="utf-8"))
+    output_file = output_file_temp.replace('\n', '')
+    o = open(output_file, 'wb')
+
     count = int.from_bytes(f.read(2), byteorder='big')  # 取出结点数量
     bit_width = int.from_bytes(f.read(1), byteorder='big')  # 取出编码表字宽
     i = 0
@@ -161,6 +164,7 @@ def decodefile(inputfile):
     for x in de_dict.keys():
         node_dict[x] = node(de_dict[x])
         nodes.append(node_dict[x])
+
     tree = build_tree(nodes)  # 重建哈夫曼树
     encode(False)  # 建立编码表
     for x in ec_dict.keys():  # 反向字典构建
@@ -194,7 +198,7 @@ def decodefile(inputfile):
     f.close()
     o.close()
     print("File decode successful.")
-
+    return output_file
 
 if __name__ == '__main__':
 

@@ -2,11 +2,15 @@ from fastapi import FastAPI, Form, File, UploadFile
 from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime, date
+
+from starlette.background import BackgroundTask
+import os
 import models
 import json
 import re
 from huffman import *
 import os
+from starlette.responses import FileResponse
 
 app = FastAPI(
     title='Data_Structure Project API Docs',
@@ -402,21 +406,34 @@ async def download_homework(
     pass
 
 
+#  下载资源
+@app.get("user/courses/download_resource")
+async def download_resource(
+        course_id: str = Form(...),
+        sc_id: int = Form(...),
+        version: int = Form(...)
+):
+    raw = course[course_id]
+    cur = models.Course.construct(**raw)
+    sc = cur.resources[sc_id]
+    zip_name = sc.files[version]
+    zip_path = "/files/" + course_id + "/source/" + zip_name + ".ys"
+    temp_file_path = decodefile(zip_path)
+    # 后台删除临时文件
+    task = BackgroundTask(os.remove, path=temp_file_path)
+    return FileResponse(
+        path=temp_file_path,
+        filename=temp_file_path,
+        background=task
+    )
+
+
 # TODO: 批改作业
 @app.put("superuser/courses/charge_homework")
 async def download_homework(
         user_id: str = Form(...),
         course_id: str = Form(...),
         homework_id: int = Form(...)
-):
-    pass
-
-
-# TODO: 下载资源
-@app.get("user/courses/download_resource")
-async def download_resource(
-        course_id: str = Form(...),
-        sc_id: int = Form(...)
 ):
     pass
 
