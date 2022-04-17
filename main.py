@@ -145,7 +145,7 @@ async def upload_homework(
         for file_name in file:
             name = file_name.split('.')
             info = name[0].split('-')
-            if info[-1] and info[0] is user:
+            if info[0] is user:
                 version = version + 1
     # def encode-file(input file, student_id, type, course, id=0, version=0):
     zip_name = encodefile(fname, user, "homework", course_id, hm.id, version)
@@ -173,7 +173,7 @@ async def upload_homework(
     })
 
 
-# 查询课程作业
+"""# 查询课程作业
 @app.post("/user/courses/query_homework")
 async def query_homework(
         user: str,
@@ -196,6 +196,7 @@ async def query_homework(
                 }
             )
     return hms
+"""
 
 
 # 上传资源
@@ -210,12 +211,20 @@ async def upload_resources(
     raw = course[course_id]
     cur = models.Course.construct(**raw)
     # def encodefile(inputfile, student_id, type, course, id=0, version=0):
-    zip_name = encodefile(file, user, "homework", cur.name)
+
+    contents = await file.read()
+
+    fname = "temp/" + file.filename
+    with open(fname, "wb") as f:
+        f.write(contents)
+
+    zip_name = encodefile(fname, user, "source", course_id)
     new_sc = models.Course.resource(
         name=description,
         authors=[user],
         files=[zip_name]
     )
+
     new_sc.description.append(description)
     new_sc.time = datetime
     cur.resources.append(new_sc)
@@ -223,14 +232,13 @@ async def upload_resources(
     n = json.loads(n)
     # 更新
     course[course_id] = n
-    with open("users.json", "w", encoding='utf-8') as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
+
+    with open("courses.json", "w", encoding='utf-8') as f:
+        json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
-        'file_name': zip_name,
         'sc_name': description,
         'sc_id': len(cur.resources),
         'author': user,
-        'time': datetime,
     })
 
 
