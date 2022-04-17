@@ -263,7 +263,7 @@ async def response_model(user: UserIn):
 
 
 # 添加课程
-@app.post("/superuser/courses/create_course")
+@app.post("/superuser/courses/create_course")#fine
 async def create_courses(
         c_name: str = Form(...),
         c_clas: int = Form(...),
@@ -272,11 +272,13 @@ async def create_courses(
         c_end: list = Form(...),
         c_address: str = Form(...),
         c_contact_group: str = Form(...),  # id
+        c_teacher: str = Form(...)
 ):
     new_course = models.Course(
         name=c_name,
         clas=c_clas,
         date=c_date,
+        teacher=c_teacher,
         start=c_start,
         end=c_end,
         address=c_address,
@@ -285,8 +287,8 @@ async def create_courses(
     formatting = json.dumps(new_course, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     formatted = json.loads(formatting)  # 格式化
     new_name_id = c_name + "-" + str(c_clas)
-    course[new_name_id] = formatted
-    with open("users.json", "w", encoding='utf-8') as f:
+    course.update(new_name_id=formatted)
+    with open("courses.json", "w", encoding='utf-8') as f:
         json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
         "course_name": new_name_id,
