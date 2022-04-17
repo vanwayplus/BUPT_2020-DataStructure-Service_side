@@ -299,7 +299,7 @@ async def create_courses(
 # 创建考试信息
 @app.post("/superuser/courses/create_exams")
 async def create_exams(
-        superuser_id: str = Form(...),
+        #superuser_id: str = Form(...),
         course_id: str = Form(...),
         exam_name: str = Form(...),
         start_time: str = Form(...),
@@ -324,10 +324,10 @@ async def create_exams(
     formatting = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     formatted = json.loads(formatting)
     course[course_id] = formatted
-    with open("users.json", "w", encoding='utf-8') as f:
+    with open("courses.json", "w", encoding='utf-8') as f:
         json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
-        "exams": formatted
+        "course": course[course_id]
     })
 
 
