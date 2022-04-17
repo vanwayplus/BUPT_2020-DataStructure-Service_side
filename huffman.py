@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 import sys
 
 sys.setrecursionlimit(1000000)  # 压缩大文件实时会出现超出递归深度，故修改限制
+import os
 
 
 # 定义哈夫曼树的节点类
@@ -19,7 +20,7 @@ class node(object):
         return n
 
     def encode(n):
-        if n.father == None:
+        if n.father is None:
             return b''
         if n.father.left == n:
             return node.encode(n.father) + b'0'  # 左节点编号'0'
@@ -39,16 +40,22 @@ def build_tree(l):
     return build_tree(sorts)
 
 
-def encode(echo):
-    for x in node_dict.keys():
-        ec_dict[x] = node.encode(node_dict[x])
-        if echo == True:  # 输出编码表（用于调试）
-            print(x)
-            print(ec_dict[x])
-
-
 def encodefile(inputfile, student_id, type, course, id=0, version=0):
+    def encode(echo):
+        for x in node_dict.keys():
+            ec_dict[x] = node.encode(node_dict[x])
+            if echo:  # 输出编码表（用于调试）
+                print(x)
+                print(ec_dict[x])
+
+    node_dict = {}  # 建立原始数据与编码节点的映射，便于稍后输出数据的编码
+    count_dict = {}
+    ec_dict = {}
+    nodes = []
+    inverse_dict = {}
+
     print("Starting encode...")
+    # f = await inputfile.read()
     f = open(inputfile, "rb")
     bytes_width = 1  # 每次读取的字节宽度
     i = 0
@@ -95,13 +102,17 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
     last = 0
     name = inputfile.split('.')
     # 获取存储路径以及文件名
-    if type is "homework":
-        o = open("file/" + course + "/homework/" + student_id + "-" + id + "-" + version + ".ys", 'wb')
-    elif type is "source":
-        o = open("file/" + course + "/source/" + id + ".ys", 'wb')
+
+    if type == "homework":
+        path_0 = "C:/Users/littl/PycharmProjects/fastApiProject2/files/" + course + "/homework/"
+        path = path_0 + student_id + "-" + str(id) + "-" + str(version) + ".ys"
+    elif type == "source":
+        path_0 = "C:/Users/littl/PycharmProjects/fastApiProject2/files/" + course + "/source/"
+        path = path_0 + str(id) + ".ys"
     else:
         return "invalid input"
-
+    os.makedirs(path_0, exist_ok=True)
+    o = open(path, 'wb')
     # 写入原文件信息
     name = inputfile.split('/')
     o.write((name[len(name) - 1] + '\n').encode(encoding="utf-8"))  # 写出原文件名
@@ -109,6 +120,8 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
     o.write(int.to_bytes(bit_width, 1, byteorder='big'))  # 写出编码表字节宽度
     for x in ec_dict.keys():  # 编码文件头
         o.write(x)
+        print(o.name)
+        print("Done")
         o.write(int.to_bytes(count_dict[x], bit_width, byteorder='big'))
 
     print('head OK')
@@ -134,10 +147,23 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
         o.write(int.to_bytes(raw, 1, byteorder='big'))
     o.close()
     print("File encode successful.")
-    return student_id + "-" + id + "-" + version + ".ys"
+    return path
 
 
 def decodefile(inputfile):
+    node_dict = {}  # 建立原始数据与编码节点的映射，便于稍后输出数据的编码
+    count_dict = {}
+    ec_dict = {}
+    nodes = []
+    inverse_dict = {}
+
+    def encode(echo):
+        for x in node_dict.keys():
+            ec_dict[x] = node.encode(node_dict[x])
+            if echo:  # 输出编码表（用于调试）
+                print(x)
+                print(ec_dict[x])
+
     print("Starting decode...")
     count = 0
     raw = 0
@@ -147,7 +173,7 @@ def decodefile(inputfile):
     eof = f.tell()
     f.seek(0)
     name = inputfile.split('/')
-    #文件名
+    # 文件名
     output_file_temp = inputfile.replace(name[len(name) - 1], f.readline().decode(encoding="utf-8"))
     output_file = output_file_temp.replace('\n', '')
     o = open(output_file, 'wb')
@@ -199,17 +225,3 @@ def decodefile(inputfile):
     o.close()
     print("File decode successful.")
     return output_file
-
-if __name__ == '__main__':
-
-    # 数据初始化
-    node_dict = {}  # 建立原始数据与编码节点的映射，便于稍后输出数据的编码
-    count_dict = {}
-    ec_dict = {}
-    nodes = []
-    inverse_dict = {}
-
-    if input("1：压缩文件\t2：解压文件\n请输入你要执行的操作：") == '1':
-        encodefile(input("请输入要压缩的文件："))
-    else:
-        decodefile(input("请输入要解压的文件："))

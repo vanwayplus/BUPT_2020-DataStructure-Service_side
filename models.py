@@ -44,6 +44,7 @@ class Course(BaseModel):
         description: Optional[str] = None
 
     class homework(BaseModel):
+        id: int
         name: str
         submitted: Optional[list] = []
         #scores: Optional[list] = []

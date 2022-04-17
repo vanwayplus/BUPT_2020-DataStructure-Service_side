@@ -14,15 +14,20 @@
             {
                 "description": "啦啦啦",
                 "end": "12，30",
-                "files": [],
+                "files": [
+                    "2020211100-0-0.ys",
+                    "C:/Users/littl/PycharmProjects/fastApiProject2/files/形式语言与自动机-1/homework/2020211101-0-0.ys"
+                ],
                 "folder": null,
+                "id": 0,
                 "name": "作业1",
                 "source": null,
                 "start": "12.10",
-                "submitted": [],
-                "unsubmitted": [
+                "submitted": [
                     "2020211100",
-                    "2020211101",
+                    "2020211101"
+                ],
+                "unsubmitted": [
                     "2020211102",
                     "2020211103",
                     "2020211104",

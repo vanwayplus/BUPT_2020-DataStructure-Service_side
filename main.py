@@ -130,35 +130,46 @@ async def upload_homework(
     # contents = await file_b.read()
     # models.Course.homework
     raw = course[course_id]
+
     cur = models.Course.construct(**raw)
-    hm = cur.homework
+    hm = cur.homeworks[hm_id]
+    hm = models.Course.homework.construct(**hm)
     version = 0
+    contents = await file_b.read()
+
+    fname = "temp/" + file_b.filename
+    with open(fname, "wb") as f:
+        f.write(contents)
 
     for file in hm.files:
-        name = file.split('.')
-        info = name.split('-')
-        if info[-1] and info[0] is user:
-            version = version + 1
+        for file_name in file:
+            name = file_name.split('.')
+            info = name[0].split('-')
+            if info[-1] and info[0] is user:
+                version = version + 1
     # def encode-file(input file, student_id, type, course, id=0, version=0):
-    zip_name = encodefile(file_b, user, "homework", course_id, hm.id, version)
+    zip_name = encodefile(fname, user, "homework", course_id, hm.id, version)
 
     # 更新当前文件属性
-    hm.unsubmitted.remove(user)
-    hm.submitted.append(user)
-    hm.files.append(zip_name)
+    if user in hm.unsubmitted:
+        hm.unsubmitted.remove(user)
+        hm.submitted.append(user)
+        hm.files.append(zip_name)
 
     cur.homeworks[hm_id] = hm
+
     n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     n = json.loads(n)
+
     course[course_id] = n
-    with open("users.json", "w", encoding='utf-8') as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
+
+    with open("courses.json", "w", encoding='utf-8') as f:
+        json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
         'file_name': zip_name,
         'version': version,
         'homework_id': hm_id,
         'user': user,
-        'time': datetime,
     })
 
 
@@ -167,11 +178,11 @@ async def upload_homework(
 async def query_homework(
         user: str,
         course_id: str,
-        homework_id: Optional[str] = None,
+        homework_id: str = None
 ):
     raw = course[course_id]
     cur = models.Course.construct(**raw)
-    hm = cur.homework
+    hm = cur.homeworks[homework_id]
     hms = []
     for file in hm.files:
         name = file.split('.')
