@@ -256,22 +256,29 @@ async def update_resources(
     # sc_list = cur.resources
     if sc_id > len(cur.resources):
         return "not exist, please create one"
-    zip_name = encodefile(file, user, "homework", cur.name)
+
+    contents = await file.read()
+
+    fname = "temp/" + file.filename
+    with open(fname, "wb") as f:
+        f.write(contents)
+
+    zip_name = encodefile(file, user, "source", course_id)
     # cur_sc = cur.resources[sc_id]
     cur.resources[sc_id].files.append(zip_name)
     cur.resources[sc_id].description.append(description)
+
     n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     n = json.loads(n)
     course[course_id] = n
-    with open("users.json", "w", encoding='utf-8') as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
+
+    with open("courses.json", "w", encoding='utf-8') as f:
+        json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
-        'file_name': zip_name,
         'name': cur.resources[sc_id],
         'details': description,
         'author': user,
     })
-    pass
 
 
 # 管理员登录
