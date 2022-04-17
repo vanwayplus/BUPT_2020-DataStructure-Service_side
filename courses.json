@@ -1,182 +1,338 @@
 {
-  "形式语言与自动机-1":{
-      "name": "形式语言与自动机",
-      "clas": 1,
-      "teacher": "刘一",
-      "date": [1],
-      "start": [1],
-      "end": [2],
-      "contact_group": "QQ群：123456789"
-  },
-  "毛泽东思想和中国特色社会主义理论体系概论-1":{
-      "name": "毛泽东思想和中国特色社会主义理论体系概论",
-      "clas": 1,
-      "teacher": "刘二",
-      "date": [1],
-      "start": [3, 3],
-      "end": [4, 4],
-      "contact_group": "QQ群：123456789"
-  },
-  "计算机组成原理-1":{
-      "name": "计算机组成原理",
-      "clas": 1,
-      "teacher": "刘三",
-      "date": [1],
-      "start": [6],
-      "end": [8],
-      "contact_group": "QQ群：123456789"
-  },
-  "计算机网络-1":{
-      "name": "形式语言与自动机",
-      "clas": 1,
-      "teacher": "刘四",
-      "date": [2, 4],
-      "start": [3, 3],
-      "end": [4, 4],
-      "contact_group": "QQ群：123456789"
-  },
-  "面向对象程序设计实践（Java）-1":{
-      "name": "面向对象程序设计实践（Java）",
-      "clas": 1,
-      "teacher": "刘五",
-      "date": [2],
-      "start": [6],
-      "end": [7],
-      "contact_group": "QQ群：123456789"
-  },
-  "计算机网络课程设计-1":{
-      "name": "计算机网络课程设计",
-      "clas": 1,
-      "teacher": "刘六",
-      "date": [2],
-      "start": [8],
-      "end": [9],
-      "contact_group": "QQ群：123456789"
-  },
-  "数字逻辑与数字系统课程设计-1":{
-      "name": "数字逻辑与数字系统课程设计",
-      "clas": 1,
-      "teacher": "刘七",
-      "date": [2],
-      "start": [10],
-      "end": [11],
-      "contact_group": "QQ群：123456789"
-  },
-  "数据结构课程设计-1":{
-      "name": "数据结构课程设计",
-      "clas": 1,
-      "teacher": "刘八",
-      "date": [3],
-      "start": [1],
-      "end": [2],
-      "contact_group": "QQ群：123456789"
-  },
-  "体育基础-1":{
-      "name": "体育基础",
-      "clas": 1,
-      "teacher": "刘九",
-      "date": [4],
-      "start": [6],
-      "end": [7],
-      "contact_group": "QQ群：123456789"
-  },
-  "形势与政策-1":{
-      "name": "形势与政策",
-      "clas": 1,
-      "teacher": "刘十",
-      "date": [5],
-      "start": [1, 2],
-      "end": [2, 1],
-      "contact_group": "QQ群：123456789"
-  },
-  "形式语言与自动机-2":{
-      "name": "形式语言与自动机",
-      "clas": 2,
-      "teacher": "杨1",
-      "date": [5],
-      "start": [1],
-      "end": [2],
-      "contact_group": "QQ群：123456789"
-  },
-  "毛泽东思想和中国特色社会主义理论体系概论-2":{
-      "name": "毛泽东思想和中国特色社会主义理论体系概论",
-      "clas": 2,
-      "teacher": "杨二",
-      "date": [5],
-      "start": [6],
-      "end": [7],
-      "contact_group": "QQ群：123456789"
-  },
-  "计算机组成原理-2":{
-      "name": "计算机组成原理",
-      "clas": 2,
-      "teacher": "刘三",
-      "date": [1, 5],
-      "start": [3, 8],
-      "end": [4, 9],
-      "contact_group": "QQ群：123456789"
-  },
-  "计算机网络-2":{
-      "name": "形式语言与自动机",
-      "clas": 2,
-      "teacher": "杨四",
-      "date": [4, 1],
-      "start": [3, 1],
-      "end": [4, 2],
-      "contact_group": "QQ群：123456789"
-  },
-  "面向对象程序设计实践（Java）-2":{
-      "name": "面向对象程序设计实践（Java）",
-      "clas": 2,
-      "teacher": "杨五",
-      "date": [4],
-      "start": [8],
-      "end": [9],
-      "contact_group": "QQ群：123456789"
-  },
-  "计算机网络课程设计-2":{
-      "name": "计算机网络课程设计",
-      "clas": 2,
-      "teacher": "杨六",
-      "date": [3],
-      "start": [1],
-      "end": [2],
-      "contact_group": "QQ群：123456789"
-  },
-  "数字逻辑与数字系统课程设计-2":{
-      "name": "数字逻辑与数字系统课程设计",
-      "clas": 2,
-      "teacher": "杨七",
-      "date": [3],
-      "start": [3],
-      "end": [4],
-      "contact_group": "QQ群：123456789"
-  },
-  "数据结构课程设计-2":{
-      "name": "数据结构课程设计",
-      "clas": 2,
-      "teacher": "杨八",
-      "date": [2],
-      "start": [1],
-      "end": [2],
-      "contact_group": "QQ群：123456789"
-  },
-  "体育基础-2":{
-      "name": "体育基础",
-      "clas": 2,
-      "teacher": "杨九",
-      "date": [2],
-      "start": [7],
-      "end": [8],
-      "contact_group": "QQ群：123456789"
-  },
-  "形势与政策-2":{
-      "name": "形势与政策",
-      "clas": 2,
-      "teacher": "杨十",
-      "date": [1],
-      "start": [6],
-      "end": [7],
-      "contact_group": "QQ群：123456789"
-  }
+    "形式语言与自动机-1": {
+        "clas": 1,
+        "contact_group": "但是发射点",
+        "create_time": null,
+        "date": [
+            ""
+        ],
+        "end": [
+            ""
+        ],
+        "exams": [],
+        "homeworks": [
+            {
+                "description": "啦啦啦",
+                "end": "12，30",
+                "files": [],
+                "folder": null,
+                "name": "作业1",
+                "source": null,
+                "start": "12.10",
+                "submitted": [],
+                "unsubmitted": [
+                    "2020211100",
+                    "2020211101",
+                    "2020211102",
+                    "2020211103",
+                    "2020211104",
+                    "2020211105"
+                ]
+            }
+        ],
+        "name": "形式语言与自动机",
+        "resources": [],
+        "start": [
+            ""
+        ],
+        "teacher": "刘一"
+    },
+    "毛泽东思想和中国特色社会主义理论体系概论-1": {
+        "name": "毛泽东思想和中国特色社会主义理论体系概论",
+        "clas": 1,
+        "teacher": "刘二",
+        "date": [
+            1
+        ],
+        "start": [
+            3,
+            3
+        ],
+        "end": [
+            4,
+            4
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "计算机组成原理-1": {
+        "name": "计算机组成原理",
+        "clas": 1,
+        "teacher": "刘三",
+        "date": [
+            1
+        ],
+        "start": [
+            6
+        ],
+        "end": [
+            8
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "计算机网络-1": {
+        "name": "形式语言与自动机",
+        "clas": 1,
+        "teacher": "刘四",
+        "date": [
+            2,
+            4
+        ],
+        "start": [
+            3,
+            3
+        ],
+        "end": [
+            4,
+            4
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "面向对象程序设计实践（Java）-1": {
+        "name": "面向对象程序设计实践（Java）",
+        "clas": 1,
+        "teacher": "刘五",
+        "date": [
+            2
+        ],
+        "start": [
+            6
+        ],
+        "end": [
+            7
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "计算机网络课程设计-1": {
+        "name": "计算机网络课程设计",
+        "clas": 1,
+        "teacher": "刘六",
+        "date": [
+            2
+        ],
+        "start": [
+            8
+        ],
+        "end": [
+            9
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "数字逻辑与数字系统课程设计-1": {
+        "name": "数字逻辑与数字系统课程设计",
+        "clas": 1,
+        "teacher": "刘七",
+        "date": [
+            2
+        ],
+        "start": [
+            10
+        ],
+        "end": [
+            11
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "数据结构课程设计-1": {
+        "name": "数据结构课程设计",
+        "clas": 1,
+        "teacher": "刘八",
+        "date": [
+            3
+        ],
+        "start": [
+            1
+        ],
+        "end": [
+            2
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "体育基础-1": {
+        "name": "体育基础",
+        "clas": 1,
+        "teacher": "刘九",
+        "date": [
+            4
+        ],
+        "start": [
+            6
+        ],
+        "end": [
+            7
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "形势与政策-1": {
+        "name": "形势与政策",
+        "clas": 1,
+        "teacher": "刘十",
+        "date": [
+            5
+        ],
+        "start": [
+            1,
+            2
+        ],
+        "end": [
+            2,
+            1
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "形式语言与自动机-2": {
+        "name": "形式语言与自动机",
+        "clas": 2,
+        "teacher": "杨1",
+        "date": [
+            5
+        ],
+        "start": [
+            1
+        ],
+        "end": [
+            2
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "毛泽东思想和中国特色社会主义理论体系概论-2": {
+        "name": "毛泽东思想和中国特色社会主义理论体系概论",
+        "clas": 2,
+        "teacher": "杨二",
+        "date": [
+            5
+        ],
+        "start": [
+            6
+        ],
+        "end": [
+            7
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "计算机组成原理-2": {
+        "name": "计算机组成原理",
+        "clas": 2,
+        "teacher": "刘三",
+        "date": [
+            1,
+            5
+        ],
+        "start": [
+            3,
+            8
+        ],
+        "end": [
+            4,
+            9
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "计算机网络-2": {
+        "name": "形式语言与自动机",
+        "clas": 2,
+        "teacher": "杨四",
+        "date": [
+            4,
+            1
+        ],
+        "start": [
+            3,
+            1
+        ],
+        "end": [
+            4,
+            2
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "面向对象程序设计实践（Java）-2": {
+        "name": "面向对象程序设计实践（Java）",
+        "clas": 2,
+        "teacher": "杨五",
+        "date": [
+            4
+        ],
+        "start": [
+            8
+        ],
+        "end": [
+            9
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "计算机网络课程设计-2": {
+        "name": "计算机网络课程设计",
+        "clas": 2,
+        "teacher": "杨六",
+        "date": [
+            3
+        ],
+        "start": [
+            1
+        ],
+        "end": [
+            2
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "数字逻辑与数字系统课程设计-2": {
+        "name": "数字逻辑与数字系统课程设计",
+        "clas": 2,
+        "teacher": "杨七",
+        "date": [
+            3
+        ],
+        "start": [
+            3
+        ],
+        "end": [
+            4
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "数据结构课程设计-2": {
+        "name": "数据结构课程设计",
+        "clas": 2,
+        "teacher": "杨八",
+        "date": [
+            2
+        ],
+        "start": [
+            1
+        ],
+        "end": [
+            2
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "体育基础-2": {
+        "name": "体育基础",
+        "clas": 2,
+        "teacher": "杨九",
+        "date": [
+            2
+        ],
+        "start": [
+            7
+        ],
+        "end": [
+            8
+        ],
+        "contact_group": "QQ群：123456789"
+    },
+    "形势与政策-2": {
+        "name": "形势与政策",
+        "clas": 2,
+        "teacher": "杨十",
+        "date": [
+            1
+        ],
+        "start": [
+            6
+        ],
+        "end": [
+            7
+        ],
+        "contact_group": "QQ群：123456789"
+    }
 }
