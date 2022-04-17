@@ -46,6 +46,7 @@ class Course(BaseModel):
     class homework(BaseModel):
         name: str
         submitted: Optional[list] = []
+        #scores: Optional[list] = []
         files: Optional[list] = []
         folder: Optional[str] = None
         unsubmitted: Optional[list] = []

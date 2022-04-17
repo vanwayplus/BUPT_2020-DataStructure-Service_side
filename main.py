@@ -19,6 +19,13 @@ app = FastAPI(
     docs_url='/docs',
 )
 
+
+def logging(user, func, time, destination=None):
+    new_log = {time: user + func + destination}
+    with open("log.json", "a", encoding='utf-8') as f:
+        json.dump(new_log, f, indent=4, ensure_ascii=False)
+
+
 with open("users.json", "r", encoding='utf-8') as f:
     users = json.load(f)
 
@@ -187,7 +194,7 @@ async def upload_resources(
         user: str = Form(...),
         sc_id: Optional[str] = Form(...),
         course_id: str = Form(...),
-        description: Optional[str] = Form(0, ...)
+        description: Optional[str] = Form(...)
 ):
     raw = course[course_id]
     cur = models.Course.construct(**raw)
@@ -248,7 +255,7 @@ async def update_resources(
     pass
 
 
-# TODO:管理员登录
+# 管理员登录
 @app.post("/user/login/", response_model=models.User)
 async def response_model(user: UserIn):
     print(user.password)
@@ -396,7 +403,6 @@ async def edit_course_address(
     })
 
 
-
 #  下载资源
 @app.get("/user/courses/download_resource")
 async def download_resource(
@@ -418,8 +424,9 @@ async def download_resource(
         background=task
     )
 
+
 # TODO:下载作业
-@app.get("/courses/download_homework")
+@app.get("/superuser/courses/download_homework")
 async def download_homework(
         user_id: str = Form(...),
         course_id: str = Form(...),
@@ -436,5 +443,8 @@ async def download_homework(
         homework_id: int = Form(...)
 ):
     pass
+
+# TODO: 日志处理
+
 
 # TODO: 错误处理
