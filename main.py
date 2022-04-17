@@ -263,7 +263,7 @@ async def response_model(user: UserIn):
 
 
 # 添加课程
-@app.post("/superuser/courses/create_course")#fine
+@app.post("/superuser/courses/create_course")  # fine
 async def create_courses(
         c_name: str = Form(...),
         c_clas: int = Form(...),
@@ -299,7 +299,7 @@ async def create_courses(
 # 创建考试信息
 @app.post("/superuser/courses/create_exams")
 async def create_exams(
-        #superuser_id: str = Form(...),
+        # superuser_id: str = Form(...),
         course_id: str = Form(...),
         exam_name: str = Form(...),
         start_time: str = Form(...),
@@ -332,13 +332,14 @@ async def create_exams(
 
 
 # 发布作业
-@app.put("/superuser/courses/create_homework")
+@app.post("/superuser/courses/create_homework")
 async def create_exams(
+        course_id: str = Form(...),
         name: str = Form(...),
         clas: Optional[list] = Form(...),
         start: str = Form(...),
         end: str = Form(...),
-        file: Optional[UploadFile] = Form(...),
+        # file: Optional[UploadFile] = Form(...),
         description: str = Form(...),
 ):
     new_homework = models.Course.homework(
@@ -349,17 +350,23 @@ async def create_exams(
     )
     members = []
     for group in clas:
-        for _, usr in users:
+        for usr in users.values():
             cur_user = models.User(**usr)
-            if cur_user.clas is group:
+            if cur_user.clas == int(group):
                 members.append(cur_user.student_id)
     new_homework.unsubmitted = members
 
-    formatting = json.dumps(new_homework, default=lambda obj: obj.__dict__, indent=4, sort_keys=True,
-                            ensure_ascii=False)
-    formatted = json.loads(formatting)  # 格式化
-    with open("users.json", "w", encoding='utf-8') as f:
-        json.dump(formatted, f, indent=4, ensure_ascii=False)
+    raw = course[course_id]
+    cur = models.Course.construct(**raw)
+    cur.homeworks.append(new_homework)
+
+    formatting = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatted = json.loads(formatting)
+    course[course_id] = formatted
+
+    with open("courses.json", "w", encoding='utf-8') as f:
+        json.dump(course, f, indent=4, ensure_ascii=False)
+
     return ({
         "name": name,
         "course": formatted
