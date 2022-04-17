@@ -377,12 +377,12 @@ async def create_exams(
 @app.put("/superuser/courses/edit")
 async def edit_course_address(
         course_id: str = Form(...),
-        new_clas: Optional[list[int]] = Form(...),
-        new_date: Optional[list] = Form(...),
-        new_start: Optional[list] = Form(...),
-        new_end: Optional[list] = Form(...),
-        new_contact_group: Optional[str] = Form(...),  # id
-        new_address: Optional[str] = Form(...)
+        new_clas: Optional[list[int]] = None,
+        new_date: Optional[list] = None,
+        new_start: Optional[list] = None,
+        new_end: Optional[list] = None,
+        new_contact_group: Optional[str] = None,  # id
+        new_address: Optional[str] = None
 ):
     raw = course[course_id]
     cur = models.Course.construct(**raw)
