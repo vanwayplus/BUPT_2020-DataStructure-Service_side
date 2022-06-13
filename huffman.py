@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 import sys
-
-sys.setrecursionlimit(1000000)  # 压缩大文件实时会出现超出递归深度，故修改限制
 import os
+sys.setrecursionlimit(1000000)  # 压缩大文件实时会出现超出递归深度，故修改限制
+
 
 
 # 定义哈夫曼树的节点类

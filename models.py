@@ -16,6 +16,7 @@ class User(BaseModel):
         start: str
         end: str
         mode: str
+        date: Optional[str] = None
         description: Optional[str] = None
 
     clas: int
@@ -24,7 +25,7 @@ class User(BaseModel):
     name: str
     courses: Optional[list] = []
     activities: Optional[list] = []
-    sign_up: Optional[datetime]
+    clocks: Optional[list] = []
 
 
 class Superuser(BaseModel):
@@ -47,12 +48,13 @@ class Course(BaseModel):
         id: int
         name: str
         submitted: Optional[list] = []
-        #scores: Optional[list] = []
+        # scores: Optional[list] = []
         files: Optional[list] = []
         folder: Optional[str] = None
         unsubmitted: Optional[list] = []
         start: str
         end: str
+        md5: Optional[str]
         source: Optional[list] = None
         description: str
 
@@ -61,6 +63,7 @@ class Course(BaseModel):
         authors: List[int] = None
         files: List[int] = []
         time: Optional[date]
+        md5: Optional[str]
         description: Optional[List[str]] = []
 
     name: str
@@ -71,7 +74,7 @@ class Course(BaseModel):
     end: List[int] = []
     address: str
     contact_group: str
-    resources: Optional[list[resource]] = []  # list of sc format
+    resources: Optional[List[resource]] = []  # list of sc format
     exams: Optional[List[exam]] = []  # list of exam
     homeworks: Optional[List[homework]] = []  # list of hm
     create_time: Optional[datetime]

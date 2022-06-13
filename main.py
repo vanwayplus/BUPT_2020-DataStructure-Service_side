@@ -5,12 +5,16 @@ from datetime import datetime, date
 
 from starlette.background import BackgroundTask
 import os
+import hashlib
 import models
 import json
 import re
 from huffman import *
 import os
 from starlette.responses import FileResponse
+from guide import *
+from md_hash import *
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title='Data_Structure Project API Docs',
@@ -19,6 +23,19 @@ app = FastAPI(
     docs_url='/docs',
 )
 
+origins = ["*"]
+
+
+# 3、配置 CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # 允许访问的源
+    allow_credentials=False,  # 支持 cookie
+    allow_methods=["*"],  # 允许使用的请求方法
+    allow_headers=["*"]  # 允许携带的 Headers
+)
+
+Pool = []
 
 def logging(user, func, time, destination=None):
     new_log = {time: user + func + destination}
@@ -52,13 +69,18 @@ async def say_hello(name: str):
 
 
 # 用户登录
-@app.post("/user/login/", response_model=models.User)
-async def response_model(user: UserIn):
-    print(user.password)
-    return users[user.username]
+@app.get("/user/login/{user}")
+async def response_model(user: str, pswd: str):
+    if "2020211100" <= user <= "2020211110":
+        if user == pswd:
+            return "fine"
+        else:
+            return "password incorrect!"
+    else:
+        return "illegal username"
 
 
-# 获取课程表
+# 获取总日程
 @app.get("/user/courses/board/{user}")
 async def get_courses(user: str):
     cur_user = users[user]
@@ -73,6 +95,113 @@ async def get_courses(user: str):
     board = []
     for key in matched:
         board.append(course[key])
+    return board
+
+
+# 获取日程
+@app.get("/user/schedule/{user}")
+async def get_schedule(user: str, date_d: int):
+    cur_user = users[user]
+    cls = cur_user["clas"]
+    keys = list(course.keys())
+
+    schedule = []
+    matched = []
+    qw = "-" + str(cls)
+    for k in keys:
+        if re.search(qw, k):
+            matched.append(k)
+    board = []
+    for key in matched:
+        course_i = course[key]
+        starts = course_i["start"]
+        ends = course_i["end"]
+        dates = course_i["date"]
+        for i in range(len(starts)):
+            name = course_i["name"]
+            date = dates[i]
+            start, st = transfer_course_time(starts[i])
+            st, end = transfer_course_time(ends[i])
+            for i in range(len(dates)):
+                if dates[i] == date_d:
+                    a = {"name": name,
+                         "mode": "课程",
+                         "start": start,
+                         "end": end}
+                    schedule.append(a)
+
+        acts = cur_user["activities"]
+        for act in acts:
+            name = act["name"]
+            date = act["date"]
+            if date == date_d:
+                start = act["start"].split(" ")[1]
+                start = float(start.split[":"][0] + "." + start.split[":"][1])
+                end = act["end"].split(" ")[1]
+                end = float(end.split[":"][0] + "." + end.split[":"][1])
+                a = {"name": name,
+                     "mode": "活动",
+                     "start": start,
+                     "end": end}
+                schedule.append(a)
+
+    sorted_schedules = sorted(schedule, key=lambda r: r['start'])
+    return sorted_schedules
+
+
+# 获取课程表表格
+@app.get("/user/courses/table/{user}")
+async def get_table(user: str):
+    cur_user = users[user]
+    cls = cur_user["clas"]
+    keys = list(course.keys())
+    matched = []
+    qw = "-" + str(cls)
+    for k in keys:
+        if re.search(qw, k):
+            matched.append(k)
+    board = []
+    line_1 = {"name": "一"}
+    line_2 = {"name": "二"}
+    line_3 = {"name": "三"}
+    line_4 = {"name": "四"}
+    line_5 = {"name": "五"}
+    line_6 = {"name": "六"}
+    line_7 = {"name": "七"}
+    line_8 = {"name": "八"}
+    line_9 = {"name": "九"}
+    line_10 = {"name": "十"}
+    line_11 = {"name": "十一"}
+    line_12 = {"name": "十二"}
+    line_13 = {"name": "十三"}
+    line_14 = {"name": "十四"}
+    board.append(line_1)
+    board.append(line_2)
+    board.append(line_3)
+    board.append(line_4)
+    board.append(line_5)
+    board.append(line_6)
+    board.append(line_7)
+    board.append(line_8)
+    board.append(line_9)
+    board.append(line_10)
+    board.append(line_11)
+    board.append(line_13)
+    board.append(line_14)
+    for key in matched:
+        course_i = course[key]
+        starts = course_i["start"]
+        ends = course_i["end"]
+        dates = course_i["date"]
+        for i in range(len(starts)):
+            name = course_i["name"]
+            date = dates[i]
+            n_d = ["mon", "tue", "wed", "thu", "fri"]
+            date = n_d[date - 1]
+            start = starts[i]
+            end = ends[i]
+            for time in range(start, end):
+                board[time - 1][date] = name
     return board
 
 
@@ -120,7 +249,7 @@ async def get_activities(user: str):
 
 
 # 上传作业
-@app.put("/user/courses/upload_homework")
+@app.post("/user/courses/upload_homework")
 async def upload_homework(
         file_b: UploadFile = File(...),  # UploadFile转为文件对象，可以保存文件到本地
         user: str = Form(...),
@@ -173,7 +302,7 @@ async def upload_homework(
     })
 
 
-"""# 查询课程作业
+# 查询课程作业
 @app.post("/user/courses/query_homework")
 async def query_homework(
         user: str,
@@ -196,7 +325,6 @@ async def query_homework(
                 }
             )
     return hms
-"""
 
 
 # 上传资源
@@ -282,7 +410,7 @@ async def update_resources(
 
 
 # 管理员登录
-@app.post("/user/login/", response_model=models.User)
+@app.post("/superuser/login/", response_model=models.User)
 async def response_model(user: UserIn):
     print(user.password)
     return users[user.username]
@@ -400,15 +528,15 @@ async def create_exams(
 
 
 # 修改课程信息
-@app.put("/superuser/courses/edit")
+@app.post("/superuser/courses/edit")
 async def edit_course_address(
         course_id: str = Form(...),
-        new_clas: Optional[list[int]] = None,
-        new_date: Optional[list] = None,
-        new_start: Optional[list] = None,
-        new_end: Optional[list] = None,
-        new_contact_group: Optional[str] = None,  # id
-        new_address: Optional[str] = None
+        new_clas: list = None,
+        new_date: list = None,
+        new_start: list = None,
+        new_end: list = None,
+        new_contact_group: str = None,  # id
+        new_address: str = None
 ):
     raw = course[course_id]
     cur = models.Course.construct(**raw)
@@ -438,6 +566,30 @@ async def edit_course_address(
     })
 
 
+@app.get("/map/guide")
+async def guide(
+        start: str = Form(...),
+        end: str = Form(...),
+        mode: str = Form(...)
+):
+    print(start, end, mode)
+    activate_dij(start, end, mode)
+    path = []
+    distance, path = read_meta_file()
+    if path:
+        return ({
+            "state": True,
+            "distance": distance,
+            "path": path
+        })
+    else:
+        return ({
+            "state": False,
+            "distance": distance,
+            "path": path
+        })
+
+
 #  下载资源
 @app.get("/user/courses/download_resource")
 async def download_resource(
@@ -460,14 +612,96 @@ async def download_resource(
     )
 
 
-# TODO:下载作业
-@app.get("/superuser/courses/download_homework")
+# TODO:冲突
+def conflict_detection(user_id, date_d, start, end):
+    cur_user = users[user_id]
+    cls = cur_user["clas"]
+    keys = list(course.keys())
+
+    schedule = []
+    matched = []
+    qw = "-" + str(cls)
+    for k in keys:
+        if re.search(qw, k):
+            matched.append(k)
+    board = []
+    for key in matched:
+        course_i = course[key]
+        starts = course_i["start"]
+        ends = course_i["end"]
+        dates = course_i["date"]
+        for i in range(len(starts)):
+            name = course_i["name"]
+            date = dates[i]
+            start, st = transfer_course_time(starts[i])
+            st, end = transfer_course_time(ends[i])
+            for i in range(len(dates)):
+                if dates[i] == date_d:
+                    a = {"name": name,
+                         "mode": "课程",
+                         "start": start,
+                         "end": end}
+                    schedule.append(a)
+
+        acts = cur_user["activities"]
+        for act in acts:
+            name = act["name"]
+            date = act["date"]
+            if date == date_d:
+                start = act["start"].split(" ")[1]
+                start = float(start.split[":"][0] + "." + start.split[":"][1])
+                end = act["end"].split(" ")[1]
+                end = float(end.split[":"][0] + "." + end.split[":"][1])
+                a = {"name": name,
+                     "mode": "活动",
+                     "start": start,
+                     "end": end}
+                schedule.append(a)
+
+    sorted_schedules = sorted(schedule, key=lambda r: r['start'])
+    flag = 0
+    for schedule in sorted_schedules:
+        start_c = schedule["start"]
+        end_c = schedule["end"]
+        if start_c <= start <= end_c or start_c <= end <= end_c or start <= start_c and end >= end_c:
+            flag = 1
+    if flag == 0:
+        return 0  # 无冲突
+    else:
+        return 1  # 有冲突
+
+
+# TODO:闹钟
+@app.post("/user/set_alarm")
+async def set_alarm(
+        user_id: str = Form(...),
+        date: str = Form(...),
+        time: str = Form(...)
+):
+    raw = users[user_id]
+    cur = models.User.construct(**raw)
+    cur.clocks.append((date, time))
+
+    formatting = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    formatted = json.loads(formatting)
+
+    users[user_id] = formatted
+
+    with open("users.json", "w", encoding='utf-8') as f:
+        json.dump(users, f, indent=4, ensure_ascii=False)
+
+    return ({
+        "clock": (date, time)
+    })
+
+
+"""@app.put("/user/set_alarm")
 async def download_homework(
         user_id: str = Form(...),
-        course_id: str = Form(...),
-        homework_id: int = Form(...)
+        time: str = Form(...),
 ):
-    pass
+
+    pass"""
 
 
 # TODO: 批改作业
@@ -478,6 +712,37 @@ async def download_homework(
         homework_id: int = Form(...)
 ):
     pass
+
+
+def transfer_course_time(n):
+    if n == 1:
+        return (8.00, 8.45)
+    elif n == 2:
+        return 8.50, 9.35
+    elif n == 3:
+        return 9.50, 10.35
+    elif n == 4:
+        return 10.40, 11.25
+    elif n == 5:
+        return 11.30, 12.15
+    elif n == 6:
+        return 13.00, 13.45
+    elif n == 7:
+        return 13.50, 14.35
+    elif n == 8:
+        return 14.45, 15.30
+    elif n == 9:
+        return 15.40, 16.25
+    elif n == 10:
+        return 16.35, 17.20
+    elif n == 11:
+        return 17.25, 18.10
+    elif n == 12:
+        return 18.30, 19.15
+    elif n == 13:
+        return 19.20, 20.05
+    elif n == 14:
+        return 20.10, 20.55
 
 # TODO: 日志处理
 
