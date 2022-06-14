@@ -78,10 +78,9 @@ async def get_log(user: str):
 
 # 用户登录
 @app.get("/user/login_1/{user}")
-async def login(user: str, pswd: str, cur_time: str):
+async def login(user: str, pswd: str):
     if "2020211100" <= user <= "2020211110":
         if user == pswd:
-            login_log(user, cur_time)
             return "fine"
         else:
             return "password incorrect!"
@@ -90,7 +89,8 @@ async def login(user: str, pswd: str, cur_time: str):
 
 
 @app.get("/user/login_2")
-async def fuckit():
+async def fuckit( user: str, cur_time: str):
+    login_log(user, cur_time)
     return "good"
 
 
@@ -922,9 +922,9 @@ async def set_alarm(
         time: str,
         mode: str
 ):
-    await set_alarm(user_id, date, time, mode)
+    set_bell(user_id, time,date, mode)
     return ({
-        "clock": (date, time, mode)
+        "clock": (time,date , mode)
     })
 
 
@@ -932,9 +932,8 @@ async def set_alarm(
 async def get_alarm(
         user_id: str = Form(...),
         date: str = Form(...),
-        time: str = Form(...),
 ):
-    flag = get_alarm(user_id, date, time)
+    flag = get_bell(user_id, date)
     return flag
 
 
