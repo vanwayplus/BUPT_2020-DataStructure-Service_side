@@ -1,19 +1,25 @@
 {
     "形式语言与自动机-1": {
+        "name": "形式语言与自动机",
         "clas": 1,
-        "contact_group": "但是发射点",
+        "teacher": "左兴权",
         "create_time": null,
         "date": [
+            1
+        ],
+        "start": [
             1
         ],
         "end": [
             2
         ],
+        "address": "教学实验综合楼+N101",
         "exams": [],
+        "resources": [],
         "homeworks": [
             {
-                "description": "啦啦啦",
-                "end": "12.30",
+                "description": "第一次作业",
+                "end": "12，30",
                 "files": [
                     "2020211100-0-0.ys",
                     "C:/Users/littl/PycharmProjects/fastApiProject2/files/形式语言与自动机-1/homework/2020211101-0-0.ys"
@@ -35,17 +41,12 @@
                 ]
             }
         ],
-        "name": "形式语言与自动机",
-        "resources": [],
-        "start": [
-            1
-        ],
-        "teacher": "刘一"
+        "contact_group": "QQ群：123456789"
     },
     "毛泽东思想和中国特色社会主义理论体系概论-1": {
         "name": "毛泽东思想和中国特色社会主义理论体系概论",
         "clas": 1,
-        "teacher": "刘二",
+        "teacher": "宋林泽",
         "date": [
             1,
             3
@@ -58,12 +59,16 @@
             4,
             4
         ],
+        "address": "教学实验综合楼+N103",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "计算机组成原理-1": {
         "name": "计算机组成原理",
         "clas": 1,
-        "teacher": "刘三",
+        "teacher": "周锋",
         "date": [
             1
         ],
@@ -73,12 +78,16 @@
         "end": [
             8
         ],
+        "address": "教学实验综合楼+N108",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "计算机网络-1": {
-        "name": "形式语言与自动机",
+        "name": "计算机网络",
         "clas": 1,
-        "teacher": "刘四",
+        "teacher": "蒋砚军",
         "date": [
             2,
             4
@@ -91,6 +100,10 @@
             4,
             4
         ],
+        "address": "教学实验综合楼+N201",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "面向对象程序设计实践（Java）-1": {
@@ -106,12 +119,16 @@
         "end": [
             7
         ],
+        "address": "教一楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "计算机网络课程设计-1": {
         "name": "计算机网络课程设计",
         "clas": 1,
-        "teacher": "刘六",
+        "teacher": "蒋砚军",
         "date": [
             2
         ],
@@ -121,12 +138,16 @@
         "end": [
             9
         ],
+        "address": "教学实验综合楼+S103",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "数字逻辑与数字系统课程设计-1": {
         "name": "数字逻辑与数字系统课程设计",
         "clas": 1,
-        "teacher": "刘七",
+        "teacher": "靳秀国",
         "date": [
             2
         ],
@@ -136,12 +157,16 @@
         "end": [
             11
         ],
+        "address": "教三楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "数据结构课程设计-1": {
         "name": "数据结构课程设计",
         "clas": 1,
-        "teacher": "刘八",
+        "teacher": "杨俊",
         "date": [
             3
         ],
@@ -151,12 +176,16 @@
         "end": [
             2
         ],
+        "address": "教学实验综合楼+N304",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "体育基础-1": {
         "name": "体育基础",
         "clas": 1,
-        "teacher": "刘九",
+        "teacher": "刘旺",
         "date": [
             4
         ],
@@ -166,12 +195,16 @@
         "end": [
             7
         ],
+        "address": "运动场",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "形势与政策-1": {
         "name": "形势与政策",
         "clas": 1,
-        "teacher": "刘十",
+        "teacher": "宋林泽",
         "date": [
             5
         ],
@@ -182,12 +215,16 @@
         "end": [
             2
         ],
+        "address": "教一楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "形式语言与自动机-2": {
         "name": "形式语言与自动机",
         "clas": 2,
-        "teacher": "杨1",
+        "teacher": "左兴权",
         "date": [
             5
         ],
@@ -197,12 +234,16 @@
         "end": [
             2
         ],
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
+        "address": "教学实验综合楼+N102",
         "contact_group": "QQ群：123456789"
     },
     "毛泽东思想和中国特色社会主义理论体系概论-2": {
         "name": "毛泽东思想和中国特色社会主义理论体系概论",
         "clas": 2,
-        "teacher": "杨二",
+        "teacher": "宋林泽",
         "date": [
             5
         ],
@@ -212,12 +253,16 @@
         "end": [
             7
         ],
+        "address": "教四楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "计算机组成原理-2": {
         "name": "计算机组成原理",
         "clas": 2,
-        "teacher": "刘三",
+        "teacher": "周锋",
         "date": [
             1,
             5
@@ -230,12 +275,16 @@
             4,
             9
         ],
+        "address": "教学实验综合楼+S304",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "计算机网络-2": {
         "name": "形式语言与自动机",
         "clas": 2,
-        "teacher": "杨四",
+        "teacher": "左兴权",
         "date": [
             4,
             1
@@ -248,6 +297,10 @@
             4,
             2
         ],
+        "address": "教学实验综合楼+S502",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "面向对象程序设计实践（Java）-2": {
@@ -263,12 +316,16 @@
         "end": [
             9
         ],
+        "address": "教一楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "计算机网络课程设计-2": {
         "name": "计算机网络课程设计",
         "clas": 2,
-        "teacher": "杨六",
+        "teacher": "蒋砚军",
         "date": [
             3
         ],
@@ -278,12 +335,16 @@
         "end": [
             2
         ],
+        "address": "教一楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "数字逻辑与数字系统课程设计-2": {
         "name": "数字逻辑与数字系统课程设计",
         "clas": 2,
-        "teacher": "杨七",
+        "teacher": "杨秦",
         "date": [
             3
         ],
@@ -293,12 +354,16 @@
         "end": [
             4
         ],
+        "address": "教三楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "数据结构课程设计-2": {
         "name": "数据结构课程设计",
         "clas": 2,
-        "teacher": "杨八",
+        "teacher": "杨俊",
         "date": [
             2
         ],
@@ -308,12 +373,16 @@
         "end": [
             2
         ],
+        "address": "教学实验综合楼+N208",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "体育基础-2": {
         "name": "体育基础",
         "clas": 2,
-        "teacher": "杨九",
+        "teacher": "吴迪",
         "date": [
             2
         ],
@@ -323,12 +392,16 @@
         "end": [
             8
         ],
+        "address": "西土城运动场",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     },
     "形势与政策-2": {
         "name": "形势与政策",
         "clas": 2,
-        "teacher": "杨十",
+        "teacher": "宋林泽",
         "date": [
             1
         ],
@@ -338,6 +411,10 @@
         "end": [
             7
         ],
+        "address": "教一楼",
+        "exams": [],
+        "resources": [],
+        "homeworks": [],
         "contact_group": "QQ群：123456789"
     }
 }

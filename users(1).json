@@ -1,0 +1,194 @@
+{
+    "2020211100": {
+        "activities": [
+            {
+                "address": "学生活动中心",
+                "date": "5",
+                "description": "无",
+                "end": "5-20 17:30",
+                "mode": "个人",
+                "name": "社团活动",
+                "start": "5-20 16:00"
+            },
+            {
+                "address": "教三楼",
+                "date": "4",
+                "description": "端午节放假",
+                "end": "6-2 9:20",
+                "mode": "集体",
+                "name": "班会",
+                "start": "6-2 9:00"
+            },
+            {
+                "address": "实验楼S2",
+                "description": "无",
+                "end": "6-2 16:30",
+                "mode": "个人",
+                "name": "完成实验",
+                "date": "4",
+                "start": "6-2 15:00"
+            },
+            {
+                "address": "运动场",
+                "description": "带水",
+                "end": "6-2 20:30",
+                "mode": "集体",
+                "name": "足球训练",
+                "date": "4",
+                "start": "6-2 18:30"
+            },
+            {
+                "address": "西土城图书馆",
+                "description": "讨论验收事宜",
+                "end": "6-12 11:00",
+                "mode": "个人",
+                "name": "小组会",
+                "date": "7",
+                "start": "6-12 9:00"
+            },
+            {
+                "address": "图书馆",
+                "description": "复习计组期末",
+                "end": "6-12 18:40",
+                "mode": "个人",
+                "name": "自习",
+                "date": "7",
+                "start": "6-12 14:10"
+            },
+            {
+                "address": "图书馆",
+                "description": "复习计网期末",
+                "end": "6-19 12:00",
+                "mode": "个人",
+                "name": "自习",
+                "date": "7",
+                "start": "6-19 8:00"
+            },
+            {
+                "address": "东门",
+                "date": "7",
+                "description": "无",
+                "end": "6-19 21:40",
+                "mode": "集体",
+                "name": "外出聚餐",
+                "start": "6-19 17:00"
+            }
+        ],
+        "clas": 1,
+        "clocks": [
+            [
+                "5.2",
+                "12.12"
+            ]
+        ],
+        "courses": [],
+        "name": "张一",
+        "password": "2020211100",
+        "sign_up": null,
+        "student_id": "2020211100"
+    },
+    "2020211101": {
+        "activities": [
+            {
+                "address": "教学实验综合楼",
+                "date": "5",
+                "description": "携带记录本",
+                "end": "5-27 16:40",
+                "mode": "个人",
+                "name": "讲座",
+                "start": "5-27 15:00"
+            },
+            {
+                "address": "西土城校医院",
+                "date": "6",
+                "description": "无",
+                "end": "5-28 12:15",
+                "mode": "个人",
+                "name": "拿药",
+                "start": "5-28 12:00"
+            },
+            {
+                "address": "教三楼",
+                "date": "4",
+                "description": "端午节放假",
+                "end": "6-2 9:20",
+                "mode": "集体",
+                "name": "班会",
+                "start": "6-2 9:00"
+            },
+                        {
+                "address": "运动场",
+                "description": "带水",
+                "end": "6-2 20:30",
+                "mode": "集体",
+                "name": "足球训练",
+                "date": "4",
+                "start": "6-2 18:30"
+            },
+            {
+                "address": "东门",
+                "date": "7",
+                "description": "无",
+                "end": "6-19 21:40",
+                "mode": "集体",
+                "name": "外出聚餐",
+                "start": "6-19 17:00"
+            }
+        ],
+        "clas": 1,
+        "clocks": [],
+        "courses": [],
+        "name": "张二",
+        "password": "2020211101",
+        "sign_up": null,
+        "student_id": "2020211101"
+    },
+    "2020211102": {
+        "clas": 1,
+        "student_id": "2020211102",
+        "password": "2020211102",
+        "name": "张三"
+    },
+    "2020211103": {
+        "clas": 1,
+        "student_id": "2020211103",
+        "password": "2020211103",
+        "name": "张四"
+    },
+    "2020211104": {
+        "clas": 1,
+        "student_id": "2020211104",
+        "password": "2020211104",
+        "name": "张五"
+    },
+    "2020211105": {
+        "clas": 1,
+        "student_id": "2020211105",
+        "password": "2020211105",
+        "name": "张六"
+    },
+    "2020211106": {
+        "clas": 2,
+        "student_id": "2020211106",
+        "password": "2020211106",
+        "name": "王一"
+    },
+    "2020211107": {
+        "clas": 2,
+        "student_id": "2020211107",
+        "password": "2020211107",
+        "name": "王二"
+    },
+    "2020211108": {
+        "clas": 2,
+        "student_id": "2020211108",
+        "password": "2020211108",
+        "name": "王三"
+    },
+    "2020211109": {
+        "clas": 2,
+        "student_id": "2020211109",
+        "password": "2020211109",
+        "name": "王四"
+    }
+}

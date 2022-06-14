@@ -44,7 +44,7 @@ def logging(user, func, time, destination=None):
         json.dump(new_log, f, indent=4, ensure_ascii=False)
 
 
-with open("users.json", "r", encoding='utf-8') as f:
+with open("users(1).json", "r", encoding='utf-8') as f:
     users = json.load(f)
 
 with open("superusers.json", "r", encoding='utf-8') as f:
@@ -76,8 +76,8 @@ async def get_log(user: str):
 
 
 # 用户登录
-@app.get("/user/login/{user}")
-async def response_model(user: str, pswd: str, cur_time: str):
+@app.get("/user/login_1/{user}")
+async def login(user: str, pswd: str, cur_time: str):
     if "2020211100" <= user <= "2020211110":
         if user == pswd:
             login_log(user, cur_time)
@@ -86,6 +86,11 @@ async def response_model(user: str, pswd: str, cur_time: str):
             return "password incorrect!"
     else:
         return "illegal username"
+
+
+@app.get("/user/login_2")
+async def fuckit():
+    return "good"
 
 
 # 获取总日程
@@ -139,9 +144,9 @@ async def get_schedule(user: str, date_d: int):
                          "start": start,
                          "end": end}
                     schedule.append(a)
-                elif dates[i] == date_d+1:
+                elif dates[i] == date_d + 1:
                     a = {"name": name,
-                         "date":date_d+1,
+                         "date": date_d + 1,
                          "mode": "课程",
                          "start": start,
                          "end": end}
@@ -163,7 +168,7 @@ async def get_schedule(user: str, date_d: int):
                  "start": start,
                  "end": end}
             schedule.append(a)
-        elif date == date_d+1:
+        elif date == date_d + 1:
             start = act["start"].split(" ")[1]
             start = float(start.split(":")[0] + "." + start.split(":")[1])
             end = act["end"].split(" ")[1]
@@ -638,12 +643,129 @@ async def edit_course_address(
     })
 
 
+def generate_pin_from_course(cur_time, user, course_n, date_i):#bug
+    if "-" in course_n:
+        course_n = course_n.split("+")[0]
+    cur_user = users[user]
+    cls = cur_user["clas"]
+    keys = list(course.keys())
+    print(keys)
+    matched = []
+    qw = "-" + str(cls)
+    ll = []
+    aa = []
+    for key in matched:
+        course_i = course[key]
+        starts = course_i["start"]
+        ends = course_i["end"]
+        dates = course_i["date"]
+        addr = course_i["address"]
+        for i in range(len(starts)):
+            name = course_i["name"]
+            date = dates[i]
+            start = starts[i]
+            end = ends[i]
+            if date == date_i:
+                for time in range(start, end):
+                    s, e = transfer_course_time(time)
+                    ll.append((s, e, addr, name))
+    acts = cur_user["activities"]
+    for i in range(len(acts)):
+        act = acts[i]
+        name = act["name"]
+        address = act["address"]
+        date = str(act["date"])
+        if date == date_i:
+            start = act["start"].split(" ")[1]
+            start = float(start.split(":")[0] + "." + start.split(":")[1])
+            end = act["end"].split(" ")[1]
+            end = float(end.split(":")[0] + "." + end.split(":")[1])
+            ll.append((start, end, address, name))
+    sorted_list = sorted(ll, key=lambda r: r[0])
+    start, end = "0", "0"
+    for i in range(len(sorted_list)):
+        stat, ed, addr, nam = sorted_list[i]
+        if i != len(sorted_list)-1:
+            stat_p, ed_p, addr_p, nam_p = sorted_list[i + 1]
+            if stat <= cur_time <= ed or ed <= cur_time <= stat_p:
+                start = addr
+            if course_n == nam:
+                end = addr_p
+        elif i == len(sorted_list)-1:
+            if start == "0":
+                end = "0"
+            if start != "0" and end == "0":
+                end = nam
+    return start, end
+
+
+def generate_pin_from_time(cur_time, user, time_i, date_i):
+    if ":" in time_i:
+        time_i = float(time_i.split(":")[0] + "." + time_i.split(":")[1])
+    cur_user = users[user]
+    cls = cur_user["clas"]
+    keys = list(course.keys())
+    print(keys)
+    matched = []
+    qw = "-" + str(cls)
+    ll = []
+    for key in matched:
+        course_i = course[key]
+        starts = course_i["start"]
+        ends = course_i["end"]
+        dates = course_i["date"]
+        addr = course_i["address"]
+        for i in range(len(starts)):
+            name = course_i["name"]
+            date = dates[i]
+            start = starts[i]
+            end = ends[i]
+            if date == date_i:
+                for time in range(start, end):
+                    s, e = transfer_course_time(time)
+                    ll.append((s, e, addr))
+    acts = cur_user["activities"]
+    for i in range(len(acts)):
+        act = acts[i]
+        name = act["name"]
+        address = act["address"]
+        date = str(act["date"])
+        if date == date_i:
+            start = act["start"].split(" ")[1]
+            start = float(start.split(":")[0] + "." + start.split(":")[1])
+            end = act["end"].split(" ")[1]
+            end = float(end.split(":")[0] + "." + end.split(":")[1])
+            ll.append((start, end, address))
+    sorted_list = sorted(ll, key=lambda r: r[0])
+    start, end = 0, 0
+    for i in range(len(sorted_list)):
+        stat, ed, addr = sorted_list[i]
+        stat_p, ed_p, addr_p = sorted_list[i + 1]
+        if stat <= cur_time <= ed or ed <= cur_time <= stat_p:
+            start = addr
+        if ed <= time_i <= ed_p:
+            end = addr
+    return start, end
+
+
 @app.get("/map/guide")
 async def guide(
+        user: str = Form(...),
+        date: str = Form(...),
+        cur_time: str = Form(...),
         start: str = Form(...),
         end: str = Form(...),
         mode: str = Form(...)
 ):
+    f = open("guide.json", "w", encoding='utf-8')
+    nodes = f.readlines()
+    print(nodes)
+    if start not in nodes:
+        if ":" in start:
+            start, end = generate_pin_from_time(cur_time, user, start, date)
+        else:
+            start, end = generate_pin_from_course(cur_time, user, start, date)
+
     print(start, end, mode)
     activate_dij(start, end, mode)
     path = []
