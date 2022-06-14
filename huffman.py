@@ -55,7 +55,7 @@ def encodefile(inputfile, student_id, type, course, id=0, version=0):
     inverse_dict = {}
 
     print("Starting encode...")
-    # f = await inputfile.read()
+    #f = await inputfile.read()
     f = open(inputfile, "rb")
     bytes_width = 1  # 每次读取的字节宽度
     i = 0

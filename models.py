@@ -61,7 +61,7 @@ class Course(BaseModel):
     class resource(BaseModel):
         name: str
         authors: List[int] = None
-        files: List[int] = []
+        files: List[str] = []
         time: Optional[date]
         md5: Optional[str]
         description: Optional[List[str]] = []
