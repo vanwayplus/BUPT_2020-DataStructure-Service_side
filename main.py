@@ -25,7 +25,6 @@ app = FastAPI(
 
 origins = ["*"]
 
-
 # 3、配置 CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
@@ -36,6 +35,7 @@ app.add_middleware(
 )
 
 Pool = []
+
 
 def logging(user, func, time, destination=None):
     new_log = {time: user + func + destination}
@@ -130,20 +130,21 @@ async def get_schedule(user: str, date_d: int):
                          "end": end}
                     schedule.append(a)
 
-        acts = cur_user["activities"]
-        for act in acts:
-            name = act["name"]
-            date = act["date"]
-            if date == date_d:
-                start = act["start"].split(" ")[1]
-                start = float(start.split[":"][0] + "." + start.split[":"][1])
-                end = act["end"].split(" ")[1]
-                end = float(end.split[":"][0] + "." + end.split[":"][1])
-                a = {"name": name,
-                     "mode": "活动",
-                     "start": start,
-                     "end": end}
-                schedule.append(a)
+    acts = cur_user["activities"]
+    for i in range(len(acts)):
+        act = acts[i]
+        name = act["name"]
+        date = int(act["date"])
+        if date == date_d:
+            start = act["start"].split(" ")[1]
+            start = float(start.split(":")[0] + "." + start.split(":")[1])
+            end = act["end"].split(" ")[1]
+            end = float(end.split(":")[0] + "." + end.split(":")[1])
+            a = {"name": name,
+                 "mode": "活动",
+                 "start": start,
+                 "end": end}
+            schedule.append(a)
 
     sorted_schedules = sorted(schedule, key=lambda r: r['start'])
     return sorted_schedules
@@ -214,29 +215,39 @@ async def create_activities(
         start: str,
         end: str,
         mode: str,
+        date: str,
+        calendar: str,
         description: Optional[str] = None
 ):
-    cur = users[user]
-    act = models.User.activity(
-        name=name,
-        mode=mode,
-        address=address,
-        start=start,
-        end=end,
-        description=description
-    )
+    start_c = float(start.split(":")[0]+"."+ start.split(":")[1])
+    end_c = float(end.split(":")[0] + "." + end.split(":")[1])
+    if conflict_detection(user, date_d=date, start=start_c, end=end_c):
+        cur = users[user]
+        start = calendar + start
+        end = calendar + end
+        act = models.User.activity(
+            name=name,
+            mode=mode,
+            address=address,
+            start=start,
+            end=end,
+            description=description
+        )
 
-    cur_user = models.User.construct(**cur)
-    cur_user.activities.append(act)
-    n = json.dumps(cur_user, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
-    n = json.loads(n)
-    if n != users[user]:
-        users[user] = n
-        with open("users.json", "w", encoding='utf-8') as f:
-            json.dump(None, f, ensure_ascii=False)
-        with open("users.json", "w", encoding='utf-8') as f:
-            json.dump(users, f, indent=4, ensure_ascii=False)
-    return cur_user.activities
+        cur_user = models.User.construct(**cur)
+        cur_user.activities.append(act)
+        n = json.dumps(cur_user, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+        n = json.loads(n)
+
+        if n != users[user]:
+            users[user] = n
+            with open("users.json", "w", encoding='utf-8') as f:
+                json.dump(None, f, ensure_ascii=False)
+            with open("users.json", "w", encoding='utf-8') as f:
+                json.dump(users, f, indent=4, ensure_ascii=False)
+        return cur_user.activities
+    else:
+        return "conflict!"
 
 
 # 读取活动
@@ -267,6 +278,7 @@ async def upload_homework(
     contents = await file_b.read()
 
     fname = "temp/" + file_b.filename
+
     with open(fname, "wb") as f:
         f.write(contents)
 
@@ -286,7 +298,12 @@ async def upload_homework(
         hm.files.append(zip_name)
 
     cur.homeworks[hm_id] = hm
-
+    md5 = generate_file_md5value(fname)
+    if md5 in Pool:
+        chongfu = 1
+    else:
+        chongfu = 0
+        Pool.append(md5)
     n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
     n = json.loads(n)
 
@@ -299,6 +316,7 @@ async def upload_homework(
         'version': version,
         'homework_id': hm_id,
         'user': user,
+        'chongfu': chongfu
     })
 
 
@@ -360,13 +378,19 @@ async def upload_resources(
     n = json.loads(n)
     # 更新
     course[course_id] = n
-
+    mf5 = generate_file_md5value(fname)
+    if md5 in Pool:
+        chongfu = 1
+    else:
+        chongfu = 0
+        Pool.append(md5)
     with open("courses.json", "w", encoding='utf-8') as f:
         json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
         'sc_name': description,
         'sc_id': len(cur.resources),
         'author': user,
+        'chongfu': chongfu
     })
 
 
@@ -613,6 +637,7 @@ async def download_resource(
 
 
 # TODO:冲突
+#1为没有，0为有
 def conflict_detection(user_id, date_d, start, end):
     cur_user = users[user_id]
     cls = cur_user["clas"]
@@ -632,7 +657,7 @@ def conflict_detection(user_id, date_d, start, end):
         dates = course_i["date"]
         for i in range(len(starts)):
             name = course_i["name"]
-            date = dates[i]
+            date = str(dates[i])
             start, st = transfer_course_time(starts[i])
             st, end = transfer_course_time(ends[i])
             for i in range(len(dates)):
@@ -643,32 +668,34 @@ def conflict_detection(user_id, date_d, start, end):
                          "end": end}
                     schedule.append(a)
 
-        acts = cur_user["activities"]
-        for act in acts:
-            name = act["name"]
-            date = act["date"]
-            if date == date_d:
-                start = act["start"].split(" ")[1]
-                start = float(start.split[":"][0] + "." + start.split[":"][1])
-                end = act["end"].split(" ")[1]
-                end = float(end.split[":"][0] + "." + end.split[":"][1])
-                a = {"name": name,
-                     "mode": "活动",
-                     "start": start,
-                     "end": end}
-                schedule.append(a)
+    acts = cur_user["activities"]
+    for i in range(len(acts)):
+        act = acts[i]
+        name = act["name"]
+        date = str(act["date"])
+        if date == date_d:
+            start = act["start"].split(" ")[1]
+            start = float(start.split(":")[0] + "." + start.split(":")[1])
+            end = act["end"].split(" ")[1]
+            end = float(end.split(":")[0] + "." + end.split(":")[1])
+            a = {"name": name,
+                 "mode": "活动",
+                 "start": start,
+                 "end": end}
+            schedule.append(a)
 
     sorted_schedules = sorted(schedule, key=lambda r: r['start'])
     flag = 0
+
     for schedule in sorted_schedules:
         start_c = schedule["start"]
         end_c = schedule["end"]
         if start_c <= start <= end_c or start_c <= end <= end_c or start <= start_c and end >= end_c:
             flag = 1
     if flag == 0:
-        return 0  # 无冲突
+        return 1  # 无冲突
     else:
-        return 1  # 有冲突
+        return 0  # 有冲突
 
 
 # TODO:闹钟

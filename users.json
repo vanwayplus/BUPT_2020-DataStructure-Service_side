@@ -37,45 +37,56 @@
         "activities": [
             {
                 "address": "楼2222上",
+                "date": "1",
                 "description": "好耶",
                 "end": "3-15 12:40",
                 "mode": "个人",
                 "name": "活动",
-                "date": "1",
                 "start": "3-15 12:10"
             },
             {
                 "address": "楼11111下",
+                "date": "3",
                 "description": "好耶",
                 "end": "3-12 12:40",
                 "mode": "团体",
                 "name": "活动",
-                "date": "3",
                 "start": "3-12 12:10"
             },
             {
                 "address": "43424324234",
+                "date": "4",
                 "description": "好耶",
                 "end": "3-16 18:40",
                 "mode": "团体",
                 "name": "活动",
-                "date": "4",
                 "start": "3-16 17:10"
             },
             {
                 "address": "45435435342",
+                "date": "5",
                 "description": "好耶",
                 "end": "5-12 12:40",
                 "mode": "个人",
                 "name": "活动",
-                "date": "5",
                 "start": "5-12 12:10"
+            },
+            {
+                "address": "bigvanplus",
+                "date": "7",
+                "description": "342",
+                "end": "5-14 10:00",
+                "mode": "3213",
+                "name": "balvonyi",
+                "start": "5-12 8:00"
             }
         ],
         "clas": 1,
-        "student_id": "2020211101",
+        "clocks": [],
+        "courses": [],
+        "name": "张二",
         "password": "2020211101",
-        "name": "张二"
+        "student_id": "2020211101"
     },
     "2020211102": {
         "clas": 1,
