@@ -291,7 +291,6 @@ void Shortest_Dijkstra(Graph &G, char *vname, char *des)
 				}
 			}
 			//待实现：校车功能（和系统时间挂钩）
-			SchoolBus();
 		}
 		else if (v > v1)
 		{
@@ -312,6 +311,7 @@ void Shortest_Dijkstra(Graph &G, char *vname, char *des)
 				}
 			}
 		}
+		SchoolBus();
 	}
 }
 
