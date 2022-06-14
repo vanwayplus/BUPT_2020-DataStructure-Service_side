@@ -72,13 +72,22 @@
                 "start": "5-12 12:10"
             },
             {
-                "address": "bigvanplus",
-                "date": "7",
-                "description": "342",
-                "end": "5-14 10:00",
-                "mode": "3213",
                 "name": "balvonyi",
-                "start": "5-12 8:00"
+                "address": "bigvanplus",
+                "start": "3-12 3:00",
+                "end": "3-12 7:00",
+                "date": "8",
+                "mode": "213",
+                "description": "21"
+            },
+            {
+                "name": "balvonyi",
+                "address": "bigvanplus",
+                "start": "3-12 3:00",
+                "end": "3-12 7:00",
+                "date": "9",
+                "mode": "213",
+                "description": "21"
             }
         ],
         "clas": 1,
