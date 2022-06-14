@@ -15,6 +15,7 @@ from starlette.responses import FileResponse
 from guide import *
 from md_hash import *
 from def_log import *
+from bell_set import *
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -50,7 +51,7 @@ with open("users(1).json", "r", encoding='utf-8') as f:
 with open("superusers.json", "r", encoding='utf-8') as f:
     superusers = json.load(f)
 
-with open("courses.json", "r", encoding='utf-8') as f:
+with open("courses(1).json", "r", encoding='utf-8') as f:
     course = json.load(f)
 
 
@@ -109,6 +110,27 @@ async def get_courses(user: str):
     for key in matched:
         board.append(course[key])
     return board
+
+
+# 模糊匹配课程
+@app.get("/user/courses/search/{user}")
+async def search_courses(user: str, target: str):
+    cur_user = users[user]
+    cls = cur_user["clas"]
+    keys = list(course.keys())
+    matched = []
+    qw = "-" + str(cls)
+    for k in keys:
+        if re.search(qw, k):
+            matched.append(k)
+    board = []
+    for key in matched:
+        board.append(course[key])
+    tar = []
+    for b in board:
+        if target in b.values():
+            tar.append(b)
+    return tar
 
 
 # 获取日程
@@ -395,17 +417,17 @@ async def query_homework(
 
 
 # 上传资源
-@app.put("/user/courses/upload_resources")
+@app.post("/user/courses/upload_resources")
 async def upload_resources(
         file: UploadFile = File(...),  # UploadFile转为文件对象，可以保存文件到本地
         user: str = Form(...),
-        sc_id: Optional[str] = Form(...),
+        sc_name: str = Form(...),
         course_id: str = Form(...),
         cur_time: str = Form(...),
         description: Optional[str] = Form(...)
 ):
     raw = course[course_id]
-    cur = models.Course.construct(**raw)
+    # cur = models.Course.construct(**raw)
     # def encodefile(inputfile, student_id, type, course, id=0, version=0):
 
     contents = await file.read()
@@ -415,20 +437,20 @@ async def upload_resources(
         f.write(contents)
 
     zip_name = encodefile(fname, user, "source", course_id)
-    new_sc = models.Course.resource(
-        name=description,
-        authors=[user],
-        files=[zip_name]
-    )
+    new_sc = {
+        "name": sc_name,
+        "authors": [user],
+        "files": [zip_name],
+        "description": [description],
+        "time": cur_time
+    }
 
-    new_sc.description.append(description)
-    new_sc.time = datetime
-    cur.resources.append(new_sc)
-    n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
-    n = json.loads(n)
+    raw["resources"].append(new_sc)
+    # n = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
+    # n = json.loads(n)
     # 更新
-    course[course_id] = n
-    mf5 = generate_file_md5value(fname)
+    course[course_id] = raw
+    md5 = generate_file_md5value(fname)
     if md5 in Pool:
         chongfu = 1
         update_resource_log_fail(user, cur_time, course_id, description)
@@ -440,15 +462,15 @@ async def upload_resources(
     with open("courses.json", "w", encoding='utf-8') as f:
         json.dump(course, f, indent=4, ensure_ascii=False)
     return ({
-        'sc_name': description,
-        'sc_id': len(cur.resources),
+        'sc_name': sc_name,
+        'sc_id': len(raw["resources"]),
         'author': user,
         'chongfu': chongfu
     })
 
 
 # 更新资源
-@app.put("/user/courses/update_resources")
+@app.post("/user/courses/update_resources")
 async def update_resources(
         file: UploadFile = File(...),  # UploadFile转为文件对象，可以保存文件到本地
         user: str = Form(...),
@@ -643,9 +665,7 @@ async def edit_course_address(
     })
 
 
-def generate_pin_from_course(cur_time, user, course_n, date_i):#bug
-    if "-" in course_n:
-        course_n = course_n.split("+")[0]
+def generate_pin_from_course(cur_time, user, course_n, date_i):  # bug
     cur_user = users[user]
     cls = cur_user["clas"]
     keys = list(course.keys())
@@ -685,13 +705,13 @@ def generate_pin_from_course(cur_time, user, course_n, date_i):#bug
     start, end = "0", "0"
     for i in range(len(sorted_list)):
         stat, ed, addr, nam = sorted_list[i]
-        if i != len(sorted_list)-1:
+        if i != len(sorted_list) - 1:
             stat_p, ed_p, addr_p, nam_p = sorted_list[i + 1]
             if stat <= cur_time <= ed or ed <= cur_time <= stat_p:
                 start = addr
             if course_n == nam:
                 end = addr_p
-        elif i == len(sorted_list)-1:
+        elif i == len(sorted_list) - 1:
             if start == "0":
                 end = "0"
             if start != "0" and end == "0":
@@ -700,8 +720,16 @@ def generate_pin_from_course(cur_time, user, course_n, date_i):#bug
 
 
 def generate_pin_from_time(cur_time, user, time_i, date_i):
+    date_i = int(date_i)
     if ":" in time_i:
         time_i = float(time_i.split(":")[0] + "." + time_i.split(":")[1])
+        targ = False
+    else:
+        time_i = False
+        targ = time_i
+    print(cur_time)
+    if ":" in cur_time:
+        cur_time = float(cur_time.split(":")[0] + "." + cur_time.split(":")[1])
     cur_user = users[user]
     cls = cur_user["clas"]
     keys = list(course.keys())
@@ -709,6 +737,9 @@ def generate_pin_from_time(cur_time, user, time_i, date_i):
     matched = []
     qw = "-" + str(cls)
     ll = []
+    for k in keys:
+        if re.search(qw, k):
+            matched.append(k)
     for key in matched:
         course_i = course[key]
         starts = course_i["start"]
@@ -723,7 +754,7 @@ def generate_pin_from_time(cur_time, user, time_i, date_i):
             if date == date_i:
                 for time in range(start, end):
                     s, e = transfer_course_time(time)
-                    ll.append((s, e, addr))
+                    ll.append((s, e, addr, name))
     acts = cur_user["activities"]
     for i in range(len(acts)):
         act = acts[i]
@@ -735,37 +766,51 @@ def generate_pin_from_time(cur_time, user, time_i, date_i):
             start = float(start.split(":")[0] + "." + start.split(":")[1])
             end = act["end"].split(" ")[1]
             end = float(end.split(":")[0] + "." + end.split(":")[1])
-            ll.append((start, end, address))
+            ll.append((start, end, address, name))
     sorted_list = sorted(ll, key=lambda r: r[0])
-    start, end = 0, 0
+    start, end = "0", "0"
     for i in range(len(sorted_list)):
-        stat, ed, addr = sorted_list[i]
-        stat_p, ed_p, addr_p = sorted_list[i + 1]
-        if stat <= cur_time <= ed or ed <= cur_time <= stat_p:
-            start = addr
-        if ed <= time_i <= ed_p:
-            end = addr
+        stat, ed, addr,nm = sorted_list[i]
+        if i != len(sorted_list) - 1:
+            stat_p, ed_p, addr_p ,nm_p= sorted_list[i + 1]
+            if stat <= float(cur_time) <= ed or ed <= float(cur_time) <= stat_p:
+                start = addr
+            if time_i:
+                if ed <= time_i <= ed_p:
+                    if "+" in addr:
+                        addr = addr.split("+")[0]
+                    end = addr
+            elif targ:
+                if targ == nm_p:
+                    if "+" in addr:
+                        addr = addr.split("+")[0]
+                    end = addr
+        elif i == len(sorted_list) - 1:
+            if start == "0":
+                end = "0"
     return start, end
 
 
 @app.get("/map/guide")
 async def guide(
-        user: str = Form(...),
-        date: str = Form(...),
-        cur_time: str = Form(...),
-        start: str = Form(...),
-        end: str = Form(...),
-        mode: str = Form(...)
+        user: str,
+        date: str,
+        cur_time: str,
+        start: str,
+        end: str,
+        mode: str
 ):
-    f = open("guide.json", "w", encoding='utf-8')
-    nodes = f.readlines()
-    print(nodes)
-    if start not in nodes:
-        if ":" in start:
-            start, end = generate_pin_from_time(cur_time, user, start, date)
-        else:
-            start, end = generate_pin_from_course(cur_time, user, start, date)
+    with open("node.txt", "r", encoding='utf-8') as f:
+        nodes = f.readlines()
+        for i in range(len(nodes)):
+            if "\n" in nodes[i]:
+                nodes[i] = nodes[i].split("\n")[0]
+        f.close()
 
+    if start not in nodes:
+        if start == "0":
+            start = cur_time
+        start, end = generate_pin_from_time(cur_time, user, start, date)
     print(start, end, mode)
     activate_dij(start, end, mode)
     path = []
@@ -787,15 +832,15 @@ async def guide(
 #  下载资源
 @app.get("/user/courses/download_resource")
 async def download_resource(
-        course_id: str = Form(...),
-        sc_id: int = Form(...),
-        version: int = Form(...)
+        course_id: str ,
+        sc_id: int,
+        version: int
 ):
     raw = course[course_id]
     cur = models.Course.construct(**raw)
     sc = cur.resources[sc_id]
-    zip_name = sc.files[version]
-    zip_path = "/files/" + course_id + "/source/" + zip_name + ".ys"
+    zip_name = sc["files"][version]
+    zip_path =  zip_name
     temp_file_path = decodefile(zip_path)
     # 后台删除临时文件
     task = BackgroundTask(os.remove, path=temp_file_path)
@@ -872,25 +917,25 @@ def conflict_detection(user_id, date_d, start_t, end_t):
 # TODO:闹钟
 @app.post("/user/set_alarm")
 async def set_alarm(
+        user_id: str,
+        date: str,
+        time: str,
+        mode: str
+):
+    await set_alarm(user_id, date, time, mode)
+    return ({
+        "clock": (date, time, mode)
+    })
+
+
+@app.post("/user/get_alarm")
+async def get_alarm(
         user_id: str = Form(...),
         date: str = Form(...),
-        time: str = Form(...)
+        time: str = Form(...),
 ):
-    raw = users[user_id]
-    cur = models.User.construct(**raw)
-    cur.clocks.append((date, time))
-
-    formatting = json.dumps(cur, default=lambda obj: obj.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
-    formatted = json.loads(formatting)
-
-    users[user_id] = formatted
-
-    with open("users.json", "w", encoding='utf-8') as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
-
-    return ({
-        "clock": (date, time)
-    })
+    flag = get_alarm(user_id, date, time)
+    return flag
 
 
 """@app.put("/user/set_alarm")
